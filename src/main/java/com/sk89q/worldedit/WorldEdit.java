@@ -392,13 +392,20 @@ public class WorldEdit {
         String[] typeAndData = blockAndExtraData[0].split(":", 2);
         String testID = typeAndData[0];
 
-        if ("hand".equalsIgnoreCase(testID)) {
-            return player.getBlockInHand();
-        }
-
         int blockId = -1;
 
         int data = -1;
+
+        final boolean isHand = "hand".equalsIgnoreCase(testID);
+        if (isHand) {
+            final BaseBlock blockInHand = player.getBlockInHand();
+            if (blockInHand.getClass() != BaseBlock.class) {
+                return blockInHand;
+            }
+
+            blockId = blockInHand.getId();
+            data = blockInHand.getData();
+        }
 
         // Attempt to parse the item ID or otherwise resolve an item/block
         // name to its numeric ID
@@ -437,11 +444,24 @@ public class WorldEdit {
             throw new UnknownItemException(arg);
         }
 
-        if (data == -1) { // Block data not yet detected
+        final boolean parseDataValue = isHand || data == -1;
+
+        if (!allowNoData && data == -1) {
+            data = 0;
+        }
+
+        if (parseDataValue) { // Block data not yet detected
             // Parse the block data (optional)
             try {
-                data = (typeAndData.length > 1 && typeAndData[1].length() > 0) ? Integer.parseInt(typeAndData[1]) : (allowNoData ? -1 : 0);
-                if ((data > 15 && !config.allowExtraDataValues) || (data < 0 && !(allAllowed && data == -1))) {
+                if (typeAndData.length > 1 && typeAndData[1].length() > 0) {
+                    data = Integer.parseInt(typeAndData[1]);
+                }
+
+                if (data > 15 && !config.allowExtraDataValues) {
+                    throw new InvalidItemException(arg, "Unknown invalid data value '" + typeAndData[1] + "'");
+                }
+
+                if (data < 0 && !(allAllowed && data == -1)) {
                     data = 0;
                 }
             } catch (NumberFormatException e) {
