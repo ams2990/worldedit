@@ -19,11 +19,17 @@
 
 package com.sk89q.worldedit.bukkit;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sk89q.worldedit.NotABlockException;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.blocks.BaseBlock;
+import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.blocks.ItemID;
+import com.sk89q.worldedit.blocks.SkullBlock;
+import org.bukkit.DyeColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -45,6 +51,7 @@ import com.sk89q.worldedit.bukkit.entity.BukkitExpOrb;
 import com.sk89q.worldedit.bukkit.entity.BukkitItem;
 import com.sk89q.worldedit.bukkit.entity.BukkitPainting;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Dye;
 
 public class BukkitUtil {
     private BukkitUtil() {
@@ -158,10 +165,57 @@ public class BukkitUtil {
         }
     }
 
+    private static Map<Integer, BaseBlock> itemBlockMapping = new HashMap<Integer, BaseBlock>();
+    static {
+        itemBlockMapping.put(ItemID.FLINT_AND_TINDER, new BaseBlock(BlockID.FIRE));
+        itemBlockMapping.put(ItemID.STRING, new BaseBlock(BlockID.TRIPWIRE));
+        itemBlockMapping.put(ItemID.SEEDS, new BaseBlock(BlockID.CROPS));
+        itemBlockMapping.put(ItemID.SIGN, new BaseBlock(BlockID.SIGN_POST));
+        itemBlockMapping.put(ItemID.WOODEN_DOOR_ITEM, new BaseBlock(BlockID.WOODEN_DOOR));
+        itemBlockMapping.put(ItemID.WATER_BUCKET, new BaseBlock(BlockID.STATIONARY_WATER));
+        itemBlockMapping.put(ItemID.LAVA_BUCKET, new BaseBlock(BlockID.STATIONARY_LAVA));
+        itemBlockMapping.put(ItemID.IRON_DOOR_ITEM, new BaseBlock(BlockID.IRON_DOOR));
+        itemBlockMapping.put(ItemID.REDSTONE_DUST, new BaseBlock(BlockID.REDSTONE_WIRE));
+        itemBlockMapping.put(ItemID.SUGAR_CANE_ITEM, new BaseBlock(BlockID.REED));
+        itemBlockMapping.put(ItemID.BED_ITEM, new BaseBlock(BlockID.BED));
+        itemBlockMapping.put(ItemID.REDSTONE_REPEATER, new BaseBlock(BlockID.REDSTONE_REPEATER_OFF));
+        itemBlockMapping.put(ItemID.PUMPKIN_SEEDS, new BaseBlock(BlockID.PUMPKIN_STEM));
+        itemBlockMapping.put(ItemID.MELON_SEEDS, new BaseBlock(BlockID.MELON_STEM));
+        itemBlockMapping.put(ItemID.NETHER_WART_SEED, new BaseBlock(BlockID.NETHER_WART));
+        itemBlockMapping.put(ItemID.BREWING_STAND, new BaseBlock(BlockID.BREWING_STAND));
+        itemBlockMapping.put(ItemID.CAULDRON, new BaseBlock(BlockID.CAULDRON));
+        itemBlockMapping.put(ItemID.FLOWER_POT, new BaseBlock(BlockID.FLOWER_POT));
+        itemBlockMapping.put(ItemID.CARROT, new BaseBlock(BlockID.CARROTS));
+        itemBlockMapping.put(ItemID.POTATO, new BaseBlock(BlockID.POTATOES));
+        itemBlockMapping.put(ItemID.COMPARATOR, new BaseBlock(BlockID.COMPARATOR_OFF));
+
+        // These are just for fun:
+        itemBlockMapping.put(ItemID.BUCKET, new BaseBlock(BlockID.AIR)); // There's nothing in the bucket, what did you expect?
+        itemBlockMapping.put(ItemID.MILK_BUCKET, new BaseBlock(BlockID.SNOW)); // Whoops, spilled the milk
+    }
+
     public static BaseBlock toBlock(LocalWorld world, ItemStack itemStack) throws WorldEditException {
         final int typeId = itemStack.getTypeId();
         if (world.isValidBlockType(typeId)) {
             return new BaseBlock(typeId, itemStack.getDurability());
+        }
+
+        switch (typeId) {
+            case ItemID.INK_SACK:
+                final Dye materialData = (Dye) itemStack.getData();
+                if (materialData.getColor() == DyeColor.BROWN) {
+                    return new BaseBlock(BlockID.COCOA_PLANT);
+                }
+                break;
+
+            case ItemID.HEAD:
+                return new SkullBlock(0, (byte) itemStack.getDurability());
+
+            default:
+                if (itemBlockMapping.containsKey(typeId)) {
+                    return itemBlockMapping.get(typeId);
+                }
+                break;
         }
 
         throw new NotABlockException(typeId);
