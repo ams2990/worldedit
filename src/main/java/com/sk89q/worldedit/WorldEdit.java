@@ -404,44 +404,45 @@ public class WorldEdit {
             }
 
             blockId = blockInHand.getId();
-            data = blockInHand.getData();
-        }
-
-        // Attempt to parse the item ID or otherwise resolve an item/block
-        // name to its numeric ID
-        try {
-            blockId = Integer.parseInt(testID);
             blockType = BlockType.fromID(blockId);
-        } catch (NumberFormatException e) {
-            blockType = BlockType.lookup(testID);
-            if (blockType == null) {
-                int t = server.resolveItem(testID);
-                if (t > 0) {
-                    blockType = BlockType.fromID(t); // Could be null
-                    blockId = t;
+            data = blockInHand.getData();
+        } else {
+            // Attempt to parse the item ID or otherwise resolve an item/block
+            // name to its numeric ID
+            try {
+                blockId = Integer.parseInt(testID);
+                blockType = BlockType.fromID(blockId);
+            } catch (NumberFormatException e) {
+                blockType = BlockType.lookup(testID);
+                if (blockType == null) {
+                    int t = server.resolveItem(testID);
+                    if (t > 0) {
+                        blockType = BlockType.fromID(t); // Could be null
+                        blockId = t;
+                    }
                 }
             }
-        }
 
-        if (blockId == -1 && blockType == null) {
-            // Maybe it's a cloth
-            ClothColor col = ClothColor.lookup(testID);
+            if (blockId == -1 && blockType == null) {
+                // Maybe it's a cloth
+                ClothColor col = ClothColor.lookup(testID);
 
-            if (col != null) {
-                blockType = BlockType.CLOTH;
-                data = col.getID();
-            } else {
+                if (col != null) {
+                    blockType = BlockType.CLOTH;
+                    data = col.getID();
+                } else {
+                    throw new UnknownItemException(arg);
+                }
+            }
+
+            // Read block ID
+            if (blockId == -1) {
+                blockId = blockType.getID();
+            }
+
+            if (!player.getWorld().isValidBlockType(blockId)) {
                 throw new UnknownItemException(arg);
             }
-        }
-
-        // Read block ID
-        if (blockId == -1) {
-            blockId = blockType.getID();
-        }
-
-        if (!player.getWorld().isValidBlockType(blockId)) {
-            throw new UnknownItemException(arg);
         }
 
         final boolean parseDataValue = isHand || data == -1;
