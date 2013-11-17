@@ -167,31 +167,31 @@ public class BukkitUtil {
 
     private static Map<Integer, BaseBlock> itemBlockMapping = new HashMap<Integer, BaseBlock>();
     static {
-        itemBlockMapping.put(ItemID.FLINT_AND_TINDER, new BaseBlock(BlockID.FIRE));
-        itemBlockMapping.put(ItemID.STRING, new BaseBlock(BlockID.TRIPWIRE));
-        itemBlockMapping.put(ItemID.SEEDS, new BaseBlock(BlockID.CROPS));
-        itemBlockMapping.put(ItemID.SIGN, new BaseBlock(BlockID.SIGN_POST));
-        itemBlockMapping.put(ItemID.WOODEN_DOOR_ITEM, new BaseBlock(BlockID.WOODEN_DOOR));
-        itemBlockMapping.put(ItemID.WATER_BUCKET, new BaseBlock(BlockID.STATIONARY_WATER));
-        itemBlockMapping.put(ItemID.LAVA_BUCKET, new BaseBlock(BlockID.STATIONARY_LAVA));
-        itemBlockMapping.put(ItemID.IRON_DOOR_ITEM, new BaseBlock(BlockID.IRON_DOOR));
-        itemBlockMapping.put(ItemID.REDSTONE_DUST, new BaseBlock(BlockID.REDSTONE_WIRE));
-        itemBlockMapping.put(ItemID.SUGAR_CANE_ITEM, new BaseBlock(BlockID.REED));
-        itemBlockMapping.put(ItemID.BED_ITEM, new BaseBlock(BlockID.BED));
-        itemBlockMapping.put(ItemID.REDSTONE_REPEATER, new BaseBlock(BlockID.REDSTONE_REPEATER_OFF));
-        itemBlockMapping.put(ItemID.PUMPKIN_SEEDS, new BaseBlock(BlockID.PUMPKIN_STEM));
-        itemBlockMapping.put(ItemID.MELON_SEEDS, new BaseBlock(BlockID.MELON_STEM));
-        itemBlockMapping.put(ItemID.NETHER_WART_SEED, new BaseBlock(BlockID.NETHER_WART));
-        itemBlockMapping.put(ItemID.BREWING_STAND, new BaseBlock(BlockID.BREWING_STAND));
-        itemBlockMapping.put(ItemID.CAULDRON, new BaseBlock(BlockID.CAULDRON));
-        itemBlockMapping.put(ItemID.FLOWER_POT, new BaseBlock(BlockID.FLOWER_POT));
-        itemBlockMapping.put(ItemID.CARROT, new BaseBlock(BlockID.CARROTS));
-        itemBlockMapping.put(ItemID.POTATO, new BaseBlock(BlockID.POTATOES));
-        itemBlockMapping.put(ItemID.COMPARATOR, new BaseBlock(BlockID.COMPARATOR_OFF));
+        itemBlockMapping.put(ItemID.FLINT_AND_TINDER, new BaseBlock(BlockID.FIRE, -1));
+        itemBlockMapping.put(ItemID.STRING, new BaseBlock(BlockID.TRIPWIRE, -1));
+        itemBlockMapping.put(ItemID.SEEDS, new BaseBlock(BlockID.CROPS, -1));
+        itemBlockMapping.put(ItemID.SIGN, new BaseBlock(BlockID.SIGN_POST, -1));
+        itemBlockMapping.put(ItemID.WOODEN_DOOR_ITEM, new BaseBlock(BlockID.WOODEN_DOOR, -1));
+        itemBlockMapping.put(ItemID.WATER_BUCKET, new BaseBlock(BlockID.STATIONARY_WATER, -1));
+        itemBlockMapping.put(ItemID.LAVA_BUCKET, new BaseBlock(BlockID.STATIONARY_LAVA, -1));
+        itemBlockMapping.put(ItemID.IRON_DOOR_ITEM, new BaseBlock(BlockID.IRON_DOOR, -1));
+        itemBlockMapping.put(ItemID.REDSTONE_DUST, new BaseBlock(BlockID.REDSTONE_WIRE, -1));
+        itemBlockMapping.put(ItemID.SUGAR_CANE_ITEM, new BaseBlock(BlockID.REED, -1));
+        itemBlockMapping.put(ItemID.BED_ITEM, new BaseBlock(BlockID.BED, -1));
+        itemBlockMapping.put(ItemID.REDSTONE_REPEATER, new BaseBlock(BlockID.REDSTONE_REPEATER_OFF, -1));
+        itemBlockMapping.put(ItemID.PUMPKIN_SEEDS, new BaseBlock(BlockID.PUMPKIN_STEM, -1));
+        itemBlockMapping.put(ItemID.MELON_SEEDS, new BaseBlock(BlockID.MELON_STEM, -1));
+        itemBlockMapping.put(ItemID.NETHER_WART_SEED, new BaseBlock(BlockID.NETHER_WART, -1));
+        itemBlockMapping.put(ItemID.BREWING_STAND, new BaseBlock(BlockID.BREWING_STAND, -1));
+        itemBlockMapping.put(ItemID.CAULDRON, new BaseBlock(BlockID.CAULDRON, -1));
+        itemBlockMapping.put(ItemID.FLOWER_POT, new BaseBlock(BlockID.FLOWER_POT, -1));
+        itemBlockMapping.put(ItemID.CARROT, new BaseBlock(BlockID.CARROTS, -1));
+        itemBlockMapping.put(ItemID.POTATO, new BaseBlock(BlockID.POTATOES, -1));
+        itemBlockMapping.put(ItemID.COMPARATOR, new BaseBlock(BlockID.COMPARATOR_OFF, -1));
 
         // These are just for fun:
-        itemBlockMapping.put(ItemID.BUCKET, new BaseBlock(BlockID.AIR)); // There's nothing in the bucket, what did you expect?
-        itemBlockMapping.put(ItemID.MILK_BUCKET, new BaseBlock(BlockID.SNOW)); // Whoops, spilled the milk
+        itemBlockMapping.put(ItemID.BUCKET, new BaseBlock(BlockID.AIR, -1)); // There's nothing in the bucket, what did you expect?
+        itemBlockMapping.put(ItemID.MILK_BUCKET, new BaseBlock(BlockID.SNOW, -1)); // Whoops, spilled the milk
     }
 
     public static BaseBlock toBlock(LocalWorld world, ItemStack itemStack) throws WorldEditException {
@@ -204,7 +204,7 @@ public class BukkitUtil {
             case ItemID.INK_SACK:
                 final Dye materialData = (Dye) itemStack.getData();
                 if (materialData.getColor() == DyeColor.BROWN) {
-                    return new BaseBlock(BlockID.COCOA_PLANT);
+                    return new BaseBlock(BlockID.COCOA_PLANT, -1);
                 }
                 break;
 
